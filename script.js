@@ -1,10 +1,12 @@
 async function fetchWeather() {
+
+  //get all the elements
   let searchInput = document.getElementById("search").value;
   const weatherDataSection = document.getElementById("weather-data");
   weatherDataSection.style.display = "block";
-  const apiKey = "d549d2bbbbdc55a50cd7288e41b779b3";
+  const apiKey = "your openweather api key here"; //plz don't use mine lol
 
-  if(searchInput == "") {
+  if(searchInput == "") { //in case you searched nothing
     weatherDataSection.innerHTML = `
     <div>
       <h2>Empty Input!</h2>
@@ -14,7 +16,12 @@ async function fetchWeather() {
   }
 
   async function getLonAndLat() {
-    const countryCode = 972;
+    /*
+    This function uses OpenWeather API to get the lon and lat values of the searched city.
+    It changes the weather-data section with an error message if somethings goes wrong.
+    Returns json of the geolocation of the searched city
+    */
+    const countryCode = 972; //Israel code
     const geocodeURL = `http://api.openweathermap.org/geo/1.0/direct?q=${searchInput.replace(" ", "%20")},${countryCode}&limit=1&appid=${apiKey}`
 
     const response = await fetch(geocodeURL);
@@ -36,11 +43,16 @@ async function fetchWeather() {
       `;
       return;
     } else {
-      return data[0];
+      return data[0]; //everything worked fine!
     }
   }
 
   async function getWeatherData(lon, lat) {
+    /*
+    Gets the lon and lat values (which are found by the getLonAndLat function) as parameters.
+    Uses those parameters in the Open Weather weather data API to get the current weather data of the desired location.
+    Updates the weather-data innter HTML accordingly.
+    */
     const weatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
 
     const response = await fetch(weatherURL);
